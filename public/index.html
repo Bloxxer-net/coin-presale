@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOXXER Coin Presale - Revolutionäre KI-Plattform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: #f0f0f0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px;
+            min-width: 200px;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #f0f0f0;
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .purchase-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .google-btn {
+            background: #4285f4;
+            color: white;
+        }
+
+        .facebook-btn {
+            background: #1877f2;
+            color: white;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .coin-calculator {
+            background: #e8f2ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .price-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-method {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f5ff;
+        }
+
+        .purchase-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .purchase-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .features {
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .roadmap {
+            margin-top: 30px;
+        }
+
+        .roadmap-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #667eea;
+        }
+
+        .roadmap-item::after {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .wallet-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-btn {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .wallet-btn:hover {
+            border-color: #667eea;
+            background: #f0f5ff;
+            transform: translateY(-2px);
+        }
+
+        .wallet-btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .wallet-btn.secondary {
+            background: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+
+        .wallet-status {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .connected-wallet {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+        }
+
+        .disconnect-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 10px;
+        }
+
+        .wallet-generator {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+        }
+
+        .generator-content h4 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .generated-wallet {
+            margin-bottom: 20px;
+        }
+
+        .wallet-info {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .wallet-info label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .generated-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: #f8f9fa;
+        }
+
+        .show-key-btn {
+            position: absolute;
+            right: 10px;
+            top: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .wallet-warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .generator-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .social-login {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <label>Wallet auswählen oder erstellen</label>
+            <div class="wallet-section">
+                <div class="wallet-options">
+                    <button type="button" class="wallet-btn" onclick="connectMetaMask()">
+                        🦊 MetaMask verbinden
+                    </button>
+                    <button type="button" class="wallet-btn" onclick="connectWalletConnect()">
+                        🔗 WalletConnect
+                    </button>
+                    <button type="button" class="wallet-btn" onclick="showWalletGenerator()">
+                        ✨ Neue Wallet erstellen
+                    </button>
+                    <button type="button" class="wallet-btn secondary" onclick="showManualInput()">
+                        ⌨️ Adresse eingeben
+                    </button>
+                </div>
+                
+                <div id="walletStatus" class="wallet-status hidden">
+                    <div class="connected-wallet">
+                        <span class="status-icon">✅</span>
+                        <div>
+                            <strong>Wallet verbunden:</strong><br>
+                            <code id="connectedAddress"></code>
+                            <button onclick="disconnectWallet()" class="disconnect-btn">Trennen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="walletGenerator" class="wallet-generator hidden">
+                    <div class="generator-content">
+                        <h4>🔐 Neue Ethereum Wallet erstellen</h4>
+                        <div class="generated-wallet">
+                            <div class="wallet-info">
+                                <label>Ihre neue Wallet-Adresse:</label>
+                                <input type="text" id="generatedAddress" readonly class="generated-field">
+                            </div>
+                            <div class="wallet-info">
+                                <label>Private Key (SICHER AUFBEWAHREN!):</label>
+                                <input type="password" id="generatedPrivateKey" readonly class="generated-field">
+                                <button type="button" onclick="togglePrivateKeyVisibility()" class="show-key-btn">👁️ Anzeigen</button>
+                            </div>
+                            <div class="wallet-info">
+                                <label>Seed Phrase (SICHER AUFBEWAHREN!):</label>
+                                <textarea id="generatedSeedPhrase" readonly class="generated-field" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="wallet-warning">
+                            ⚠️ <strong>WICHTIG:</strong> Bewahren Sie Private Key und Seed Phrase sicher auf! 
+                            Ohne diese können Sie nicht auf Ihre Wallet zugreifen. Teilen Sie diese niemals mit anderen!
+                        </div>
+                        <div class="generator-actions">
+                            <button onclick="downloadWalletInfo()" class="wallet-btn">📥 Wallet-Info herunterladen</button>
+                            <button onclick="useGeneratedWallet()" class="wallet-btn primary">✅ Diese Wallet verwenden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="manualWalletInput" class="manual-input hidden">
+                    <div class="form-group">
+                        <label for="walletAddress">Wallet-Adresse manuell eingeben:</label>
+                        <input type="text" id="walletAddress" placeholder="0x... (Ethereum) oder andere Wallet-Adresse">
+                        <button type="button" onclick="validateManualWallet()" class="wallet-btn">✅ Adresse verwenden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="buyerEmail">E-Mail für Bestätigung (optional)</label>
+            <input type="email" id="buyerEmail" placeholder="ihre@email.de">
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 BLOXXER COIN</h1>
+            <p class="subtitle">
+                Revolutionäre KI-Plattform für eine Open Company der Zukunft<br>
+                Gemeinsam erschaffen wir die Welt von morgen - Ein Coin, eine Vision, unendliche Möglichkeiten
+            </p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSold"></div>
+                    <div class="stat-label">Coins verkauft</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalRaised"></div>
+                    <div class="stat-label">Gesammelt</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="timeLeft"></div>
+                    <div class="stat-label">Verbleibend</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value"></div>
+                    <div class="stat-label">Presale Preis</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="info-section">
+                <h2>🌟 Die Vision</h2>
+                <p>BLOXXER Coin ist mehr als nur eine Kryptowährung - es ist der Schlüssel zu einer revolutionären KI-Plattform, die eine echte Open Company ermöglicht. Jeder Coin-Inhaber wird Teil einer globalen Gemeinschaft, die gemeinsam an Projekten für eine bessere Welt arbeitet.</p>
+
+                <div class="features">
+                    <h3>✨ Einzigartige Features</h3>
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <div>
+                            <strong>KI-gesteuerte Zusammenarbeit</strong><br>
+                            Intelligente Algorithmen verbinden Menschen mit passenden Projekten
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <div>
+                            <strong>Globale Open Company</strong><br>
+                            Dezentrale Organisation für weltweite Zusammenarbeit
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <div>
+                            <strong>Faire Belohnung</strong><br>
+                            Beiträge werden automatisch in BLOXXER Coins belohnt
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div>
+                            <strong>Blockchain-Sicherheit</strong><br>
+                            Transparente und sichere Transaktionen
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roadmap">
+                    <h3>🗺️ Roadmap</h3>
+                    <div class="roadmap-item">
+                        <strong>Q1 2025:</strong> Presale Launch & Community Building
+                    </div>
+                    <div class="roadmap-item">
+                        <strong>Q2 2025:</strong> KI-Plattform Beta & Token Launch
+                    </div>
+                    <div class="roadmap-item">
+                        <strong>Q3 2025:</strong> Open Company Integration
+                    </div>
+                    <div class="roadmap-item">
+                        <strong>Q4 2025:</strong> Globale Expansion & Partnerships
+                    </div>
+                </div>
+            </div>
+
+            <div class="purchase-section">
+                <h2>💎 Coins reservieren</h2>
+                
+                <div id="purchaseForm">
+                    <div class="coin-calculator">
+                        <div class="form-group">
+                            <label for="coinAmount">Anzahl BLOXXER Coins</label>
+                            <input type="number" id="coinAmount" min="100" max="1000000" value="1000" oninput="calculatePrice()">
+                        </div>
+                        <div class="price-display" id="totalPrice">
+                            Gesamt: €50.00
+                        </div>
+                    </div>
+
+                    <div id= "purchase-container" class="form-group" style="display:none;">
+                        <div id = "confirmation-section">
+                        </div>
+                        <label>Zahlungsmethode wählen</label>
+                            <div id="paypal-button-container"></div>
+                        </div>
+                    </div>
+
+                    <button id="start-purchase-btn" class="purchase-btn" onclick="processPurchase()">
+                        🚀 Jetzt kaufen & Coins sichern
+                    </button>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
+                        <small>
+                            <strong>⚠️ Wichtiger Hinweis:</strong> Dies ist ein Presale für die Reservierung von BLOXXER Coins. Die finalen Tokens werden nach dem Launch der KI-Plattform an Ihre angegebene Wallet-Adresse übertragen. Alle Käufe sind final und nicht erstattungsfähig.
+                        </small>
+                    </div>
+                </div>
+                
+
+                <!-- Käuferliste -->
+                <div style="margin-top: 30px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
+                    <h2>📈 Live Käufe</h2>
+                    <div id="purchasesList" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Käufe werden hier angezeigt -->
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="togglePurchasesList()" id="toggleBtn" class="social-btn google-btn" style="padding: 10px 20px;">
+                            Alle Käufe anzeigen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--AeM3BGBEsxW-QG_DlCWQI1ExN7kZXhHnULlFM1j7iNiImlk4rr5EC6KLTrSbg0hUDf6C9eI9X2QnWVI5-->
+    <script src="https://www.paypal.com/sdk/js?client-id=AYMqYZz7OJLIapxCyaNss23w73eOpE83loIlOM7N6Q6YpmLhXOJWw9qGTvymwIsZNCR4rcWm8DRd8i1Z&currency=EUR"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script>
+        // Globale Variablen
+        let selectedPaymentMethod = 'stripe';
+        let connectedWallet = null;
+        let generatedWallet = null;
+        let coinPrice = 0.05; // Euro pro Coin
+        let presaleEnd = null;
+        let stripe;
+        let showAllPurchases = false;
+        let purchases = [];
+
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                const coinAmount = parseInt(document.getElementById('coinAmount').value);
+
+                return fetch('/api/paypal/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ coin_amount: coinAmount })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        return data.data.paypal_order.id; // gibt OrderID zurück
+                    } else {
+                        alert("Fehler bei der Bestellung: " + data.error);
+                        throw new Error(data.error);
+                    }
+                });
+            },
+
+            onApprove: function(data, actions) {
+                const wallet = document.getElementById('walletAddress').value;
+                const email = document.getElementById('buyerEmail').value;
+                const coinAmount = parseInt(document.getElementById('coinAmount').value);
+
+                return fetch('/api/paypal/capture-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        paypal_order_id: data.orderID,
+                        wallet_address: wallet,
+                        buyer_email: email,
+                        coin_amount: coinAmount
+                    })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert("Zahlung erfolgreich! Vielen Dank!");
+                        // Weiterleitung oder UI-Reset
+                    } else {
+                        alert("Fehler: " + result.error);
+                    }
+                });
+            }
+        }).render('#paypal-button-container');
+
+
+        function fetchPurchases() {
+            fetch('/api/purchases?limit=10')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        purchases = data.data.map(item => ({
+                            wallet: item.masked_wallet,
+                            amount: item.coin_amount,
+                            price: item.price_eur,
+                            method: item.payment_method,
+                            time: item.time_ago,
+                            email: 'anonymous' // keine E-Mail aus Datenschutzgründen anzeigen
+                        }));
+                        renderPurchasesList();
+                    }
+                });
+        }
+
+        // Timer für Countdown
+        function updateCountdown() {
+            if (!presaleEnd) return;
+            const now = new Date().getTime();
+            const timeLeft = presaleEnd - now;
+
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById('timeLeft').textContent = 
+                    (days > 0 ? days + 'd ' : '') + 
+                    String(hours).padStart(2, '0') + ':' + 
+                    String(minutes).padStart(2, '0') + ':' + 
+                    String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('timeLeft').textContent = 'Presale beendet';
+            }
+        }
+
+        // Countdown alle Sekunde aktualisieren
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Statistiken animieren
+        function animateStats() {
+            fetch('/api/stats')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('totalSold').textContent = data.data.total_coins_sold.toLocaleString();
+                        document.getElementById('totalRaised').textContent = '€' + data.data.total_raised_eur.toLocaleString();
+                    }
+                });
+        }
+
+        // Wallet-Funktionen
+        async function connectMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    if (accounts.length > 0) {
+                        connectedWallet = {
+                            address: accounts[0],
+                            type: 'MetaMask'
+                        };
+                        showConnectedWallet();
+                    }
+                } catch (error) {
+                    alert('Fehler beim Verbinden mit MetaMask: ' + error.message);
+                }
+            } else {
+                // MetaMask nicht installiert - zeige Anleitung
+                const install = confirm(
+                    'MetaMask ist nicht installiert!\n\n' +
+                    'MetaMask ist eine kostenlose Browser-Erweiterung für Ethereum.\n' +
+                    'Möchten Sie zur MetaMask-Website weitergeleitet werden?'
+                );
+                if (install) {
+                    window.open('https://metamask.io/', '_blank');
+                }
+            }
+        }
+
+        function connectWalletConnect() {
+            // WalletConnect Simulation (in Realität würde man das WalletConnect SDK verwenden)
+            alert(
+                '🔗 WalletConnect Integration\n\n' +
+                'WalletConnect ermöglicht die Verbindung mit mobilen Wallets.\n' +
+                'Diese Funktion würde in der finalen Version implementiert werden.\n\n' +
+                'Für jetzt können Sie eine neue Wallet erstellen oder die Adresse manuell eingeben.'
+            );
+        }
+
+        function showWalletGenerator() {
+            hideAllWalletSections();
+            document.getElementById('walletGenerator').classList.remove('hidden');
+            generateNewWallet();
+        }
+
+        function showManualInput() {
+            hideAllWalletSections();
+            document.getElementById('manualWalletInput').classList.remove('hidden');
+        }
+
+        function hideAllWalletSections() {
+            document.getElementById('walletStatus').classList.add('hidden');
+            document.getElementById('walletGenerator').classList.add('hidden');
+            document.getElementById('manualWalletInput').classList.add('hidden');
+        }
+
+        function showConnectedWallet() {
+            hideAllWalletSections();
+            document.getElementById('connectedAddress').textContent = connectedWallet.address;
+            document.getElementById('walletStatus').classList.remove('hidden');
+        }
+
+        function generateNewWallet() {
+            try {
+                // Neue Ethereum Wallet mit ethers.js generieren
+                const wallet = ethers.Wallet.createRandom();
+                
+                generatedWallet = {
+                    address: wallet.address,
+                    privateKey: wallet.privateKey,
+                    mnemonic: wallet.mnemonic.phrase
+                };
+
+                document.getElementById('generatedAddress').value = generatedWallet.address;
+                document.getElementById('generatedPrivateKey').value = generatedWallet.privateKey;
+                document.getElementById('generatedSeedPhrase').value = generatedWallet.mnemonic;
+
+            } catch (error) {
+                alert('Fehler beim Generieren der Wallet: ' + error.message);
+                console.error('Wallet generation error:', error);
+            }
+        }
+
+        function togglePrivateKeyVisibility() {
+            const keyField = document.getElementById('generatedPrivateKey');
+            const btn = document.querySelector('.show-key-btn');
+            
+            if (keyField.type === 'password') {
+                keyField.type = 'text';
+                btn.textContent = '🙈 Verbergen';
+            } else {
+                keyField.type = 'password';
+                btn.textContent = '👁️ Anzeigen';
+            }
+        }
+
+        function downloadWalletInfo() {
+            if (!generatedWallet) return;
+
+            const walletData = {
+                address: generatedWallet.address,
+                privateKey: generatedWallet.privateKey,
+                seedPhrase: generatedWallet.mnemonic,
+                createdAt: new Date().toISOString(),
+                warning: 'KEEP THIS FILE SECURE! Never share your private key or seed phrase!'
+            };
+
+            const blob = new Blob([JSON.stringify(walletData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bloxxer-wallet-${generatedWallet.address.substring(0, 8)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function useGeneratedWallet() {
+            if (generatedWallet) {
+                connectedWallet = {
+                    address: generatedWallet.address,
+                    type: 'Generated'
+                };
+                showConnectedWallet();
+            }
+        }
+
+        function validateManualWallet() {
+            const address = document.getElementById('walletAddress').value.trim();
+            if (!address) {
+                alert('Bitte geben Sie eine Wallet-Adresse ein!');
+                return;
+            }
+
+            if (isValidWalletAddress(address)) {
+                connectedWallet = {
+                    address: address,
+                    type: 'Manual'
+                };
+                showConnectedWallet();
+            } else {
+                const proceed = confirm(
+                    'Die Wallet-Adresse scheint nicht dem üblichen Format zu entsprechen.\n' +
+                    'Möchten Sie sie trotzdem verwenden?'
+                );
+                if (proceed) {
+                    connectedWallet = {
+                        address: address,
+                        type: 'Manual'
+                    };
+                    showConnectedWallet();
+                }
+            }
+        }
+
+        function disconnectWallet() {
+            connectedWallet = null;
+            generatedWallet = null;
+            hideAllWalletSections();
+            
+            // Formularfelder zurücksetzen
+            document.getElementById('walletAddress').value = '';
+            document.getElementById('generatedAddress').value = '';
+            document.getElementById('generatedPrivateKey').value = '';
+            document.getElementById('generatedSeedPhrase').value = '';
+        }
+
+        // Zahlungsmethoden
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedPaymentMethod = this.dataset.method;
+            });
+        });
+
+        // Preis berechnen
+        function calculatePrice() {
+            const amount = parseInt(document.getElementById('coinAmount').value) || 0;
+            const total = amount * coinPrice;
+            document.getElementById('totalPrice').textContent = `Gesamt: €${total.toFixed(2)}`;
+            return total
+        }
+
+        // Kaufprozess
+        function processPurchase() {
+            // Wallet-Adresse aus der verbundenen Wallet oder manueller Eingabe
+            let walletAddress = '';
+            
+            if (connectedWallet) {
+                walletAddress = connectedWallet.address;
+            } else {
+                alert('Bitte verbinden Sie zuerst eine Wallet oder erstellen Sie eine neue!');
+                return;
+            }
+
+            const buyerEmail = document.getElementById('buyerEmail').value.trim();
+            const coinAmount = parseInt(document.getElementById('coinAmount').value);
+            const totalPrice = coinAmount * coinPrice;
+
+            if (coinAmount < 100) {
+                alert('Mindestbestellmenge: 100 BLOXXER Coins');
+                return;
+            }
+            // Bestätigung
+            document.getElementById('confirmation-section').innerHTML = `Möchten Sie ${coinAmount.toLocaleString()} BLOXXER Coins für €${totalPrice.toFixed(2)} kaufen?<br><br>` +
+                `Wallet-Adresse: ${walletAddress}<br>` +
+                `Wallet-Typ: ${connectedWallet.type}<br>` +
+                `${buyerEmail ? `E-Mail: ${buyerEmail}` : 'Keine E-Mail angegeben'}<br><br>`
+            // Verstecke den normalen Kaufen-Button
+            document.getElementById('start-purchase-btn').style.display = 'none';
+
+            // Zeige stattdessen den PayPal-Button
+            document.getElementById('purchase-container').style.display = 'block';
+            /*    
+            const confirmation = confirm(
+                `Möchten Sie ${coinAmount.toLocaleString()} BLOXXER Coins für €${totalPrice.toFixed(2)} kaufen?\n\n` +
+                `Zahlungsmethode: ${getPaymentMethodName(selectedPaymentMethod)}\n` +
+                `Wallet-Adresse: ${walletAddress}\n` +
+                `Wallet-Typ: ${connectedWallet.type}\n` +
+                `${buyerEmail ? `E-Mail: ${buyerEmail}` : 'Keine E-Mail angegeben'}`
+            );
+
+            if (confirmation) {
+                processPayment(coinAmount, totalPrice, walletAddress, buyerEmail);
+            }*/
+        }
+
+        function isValidWalletAddress(address) {
+            // Ethereum Adresse (0x + 40 Hex-Zeichen)
+            if (/^0x[a-fA-F0-9]{40}$/.test(address)) return true;
+            // Bitcoin Adresse (grobe Prüfung)
+            if (/^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/.test(address)) return true;
+            // Andere Wallet-Formate könnten hier hinzugefügt werden
+            return address.length > 20; // Mindestlänge für Wallet-Adressen
+        }
+
+        function getPaymentMethodName(method) {
+            const names = {
+                'stripe': 'Kreditkarte',
+                'paypal': 'PayPal',
+                'ethereum': 'Ethereum'
+            };
+            return names[method] || method;
+        }
+
+        function processPayment(coinAmount, totalPrice, walletAddress, buyerEmail) {
+            const payload = {
+                wallet_address: walletAddress,
+                wallet_type: connectedWallet.type,
+                buyer_email: buyerEmail,
+                coin_amount: coinAmount,
+                payment_method: selectedPaymentMethod
+            };
+        
+            const purchaseBtn = document.querySelector('.purchase-btn');
+            purchaseBtn.disabled = true;
+            purchaseBtn.textContent = 'Zahlung wird verarbeitet...';
+        
+            fetch('/api/purchases', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (!result.success) throw new Error(result.error);
+        
+                alert(
+                    `🎉 Zahlung erfolgreich!\n\n` +
+                    `Sie haben ${coinAmount.toLocaleString()} BLOXXER Coins für €${totalPrice.toFixed(2)} reserviert.`
+                );
+        
+                document.getElementById('buyerEmail').value = '';
+                document.getElementById('coinAmount').value = '1000';
+                calculatePrice();
+                purchaseBtn.disabled = false;
+                purchaseBtn.textContent = '🚀 Jetzt kaufen & Coins sichern';
+        
+                updateStats(coinAmount, totalPrice);
+                fetchPurchases();
+        
+            })
+            .catch(err => {
+                alert('Fehler bei der Zahlung: ' + err.message);
+                purchaseBtn.disabled = false;
+                purchaseBtn.textContent = '🚀 Jetzt kaufen & Coins sichern';
+            });
+        }
+
+
+        function maskWalletAddress(address) {
+            if (address.length <= 10) return address;
+            return address.substring(0, 6) + '...' + address.substring(address.length - 4);
+        }
+
+        function updateStats(coinAmount, totalPrice) {
+            const totalSold = document.getElementById('totalSold');
+            const totalRaised = document.getElementById('totalRaised');
+            const currentSold = parseInt(totalSold.textContent.replace(/[^0-9]/g, ''));
+            const currentRaised = parseFloat(totalRaised.textContent.replace(/[^0-9.]/g, ''));
+            
+            totalSold.textContent = (currentSold + coinAmount).toLocaleString();
+            totalRaised.textContent = '€' + (currentRaised + totalPrice).toLocaleString();
+        }
+
+        function renderPurchasesList() {
+            const listContainer = document.getElementById('purchasesList');
+            const displayPurchases = showAllPurchases ? purchases : purchases.slice(0, 5);
+            
+            if (purchases.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #666;">Noch keine Käufe getätigt.</p>';
+                return;
+            }
+
+            let html = '';
+            displayPurchases.forEach((purchase, index) => {
+                const timeAgo = getTimeAgo(purchase.time);
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; background: ${index < 3 ? '#e8f5e8' : '#f8f9fa'}; border-radius: 10px; border-left: 4px solid ${index < 3 ? '#28a745' : '#6c757d'};">
+                        <div>
+                            <strong>${purchase.amount.toLocaleString()} BLOXXER</strong><br>
+                            <small style="color: #666;">
+                                Wallet: <code>${purchase.wallet}</code><br>
+                                ${purchase.method} • ${timeAgo}
+                            </small>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="color: #28a745;">€${purchase.price.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listContainer.innerHTML = html;
+            
+            // Button Text aktualisieren
+            const toggleBtn = document.getElementById('toggleBtn');
+            if (purchases.length > 5) {
+                toggleBtn.style.display = 'inline-block';
+                toggleBtn.textContent = showAllPurchases ? 'Weniger anzeigen' : `Alle ${purchases.length} Käufe anzeigen`;
+            } else {
+                toggleBtn.style.display = 'none';
+            }
+        }
+
+        function togglePurchasesList() {
+            showAllPurchases = !showAllPurchases;
+            fetchPurchases();
+            renderPurchasesList();
+        }
+
+        // Initial Setup beim Laden der Seite
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/stats')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        presaleEnd = new Date(data.data.presale_end_date).getTime();
+                        updateCountdown();
+                    }
+                });
+            animateStats();
+            calculatePrice();
+            renderPurchasesList();
+        });
+
+        // Initial Preis berechnen
+        calculatePrice();
+
+        // Smooth Scrolling für bessere UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Particles Animation (optional)
+        function createParticles() {
+            const particles = document.createElement('div');
+            particles.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: -1;
+            `;
+
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    background: rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                    animation: float ${Math.random() * 3 + 2}s infinite linear;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                `;
+                particles.appendChild(particle);
+            }
+
+            document.body.appendChild(particles);
+        }
+
+        // CSS Animation für Particles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0px) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Particles beim Laden erstellen
+        createParticles();
+    </script>
+</body>
+</html>
