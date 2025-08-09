@@ -1,3 +1,4 @@
+// BLOXXER Presale Server
 import express from "express";
 import "dotenv/config";
 import {
@@ -6,223 +7,199 @@ import {
     Environment,
     LogLevel,
     OrdersController,
-    PaymentsController,
 } from "@paypal/paypal-server-sdk";
 import bodyParser from "body-parser";
-import fs from 'fs/promises';
-import path from 'path';
-import crypto from 'crypto';
-import cors from 'cors';
+import fs from "fs/promises";
+import fsSync from "fs";
+import path from "path";
+import crypto from "crypto";
+import cors from "cors";
+import { createObjectCsvWriter } from "csv-writer";
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-// Datenverzeichnis
-const DATA_DIR = path.join(process.cwd(), 'data');
-
-// Datei-Pfade
-const FILES = {
-    purchases: path.join(DATA_DIR, 'purchases.json'),
-    stats: path.join(DATA_DIR, 'stats.json'),
-    config: path.join(DATA_DIR, 'config.json')
-};
-
-// PayPal Client Setup
-const {
-    PAYPAL_CLIENT_ID,
-    PAYPAL_CLIENT_SECRET,
-} = process.env;
-
+// PayPal Setup
 const client = new Client({
     clientCredentialsAuthCredentials: {
-        oAuthClientId: PAYPAL_CLIENT_ID,
-        oAuthClientSecret: PAYPAL_CLIENT_SECRET,
+        oAuthClientId: process.env.PAYPAL_CLIENT_ID,
+        oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET,
     },
-    timeout: 0,
     environment: Environment.Sandbox,
-    logging: {
-        logLevel: LogLevel.Info,
-        logRequest: { logBody: true },
-        logResponse: { logHeaders: true },
-    },
+    logging: { logLevel: LogLevel.Info },
 });
-
 const ordersController = new OrdersController(client);
-const paymentsController = new PaymentsController(client);
 
-// ===========================================
-// UTILITY FUNCTIONS
-// ===========================================
+// Hilfsfunktionen
+//const readJsonFile = async filePath => JSON.parse(await fs.readFile(filePath, "utf8"));
+//const writeJsonFile = async (filePath, data) => fs.writeFile(filePath, JSON.stringify(data, null, 2));
+const generateId = () => crypto.randomUUID();
+const maskWalletAddress = address => address?.length > 10 ? address.slice(0, 6) + "..." + address.slice(-4) : address;
 
-// Hilfsfunktionen für Dateizugriff
+app.use(bodyParser.json());
+
+const DATA_DIR = './data';
+const FILES = {
+  config: path.join(DATA_DIR, 'config.json'),
+  purchases: path.join(DATA_DIR, 'purchases.json'),
+  stats: path.join(DATA_DIR, 'stats.json'),
+  priceCache: path.join(DATA_DIR, 'priceCache.json'),
+  purchasesCsv: path.join(DATA_DIR, 'purchases.csv')
+};
+
 async function readJsonFile(filePath) {
-    try {
-        const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error(`Fehler beim Lesen von ${filePath}:`, error);
-        return null;
-    }
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
 }
 
 async function writeJsonFile(filePath, data) {
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-        return true;
-    } catch (error) {
-        console.error(`Fehler beim Schreiben von ${filePath}:`, error);
-        return false;
-    }
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 }
 
-function maskWalletAddress(address) {
-    if (!address || address.length <= 10) return address;
-    return address.substring(0, 6) + '...' + address.substring(address.length - 4);
-}
-
-function generateId() {
-    return crypto.randomUUID();
-}
-
-// ===========================================
-// BUSINESS LOGIC FUNCTIONS
-// ===========================================
-
-// Aktuelle Konfiguration laden
 async function getCurrentConfig() {
-    const config = await readJsonFile(FILES.config);
-    if (!config) {
-        throw new Error('Konfiguration nicht verfügbar');
-    }
-    return config;
+  return await readJsonFile(FILES.config);
 }
 
-// Coin-Preis berechnen
-async function calculateCoinPrice(coinAmount) {
-    const config = await getCurrentConfig();
-    console.log('[CONFIG]', config);
-    const totalPrice = coinAmount * config.coinPrice;
-    return {
-        coinAmount: parseInt(coinAmount),
-        unitPrice: config.coinPrice,
-        totalPrice: parseFloat(totalPrice.toFixed(2)),
-        currency: 'EUR'
+function getLondonMidnightISOString() {
+    var event = new Date();
+console.log(event.toLocaleString('en-GB', { timeZone: 'Europe/London' }));
+  const now = new Date();
+  const londonOffset = -60; // UTC+1 in minutes (Daylight Saving Time)
+  const utcMidnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  utcMidnight.setUTCMinutes(utcMidnight.getUTCMinutes() - londonOffset);
+  return utcMidnight.toISOString().split('T')[0];
+}
+
+async function getCachedPriceOrCalculate(fundingZiel, coinStartpreis, coinEndpreis, insgesamtVerkauft) {
+  const today = getLondonMidnightISOString();
+  let cache = await readJsonFile(FILES.priceCache) || {};
+
+  if (cache.date === today && cache.price) {
+    return cache.price;
+  }
+
+  const finalPrice = (insgesamtVerkauft / fundingZiel) * (coinEndpreis - coinStartpreis) + coinStartpreis;
+
+  cache = { date: today, price: finalPrice };
+  await writeJsonFile(FILES.priceCache, cache);
+
+  return finalPrice;
+}
+
+async function calculateCoinPrice(){
+  const config = await getCurrentConfig();
+  const stats = await readJsonFile(FILES.stats) || {};
+
+  const fundingZiel = config.fundingGoal;
+  const coinStartpreis = config.coinStartPrice;
+  const coinEndpreis = config.coinEndPrice;
+  const insgesamtVerkauft = stats.totalRaisedEur;
+  return await getCachedPriceOrCalculate(fundingZiel, coinStartpreis, coinEndpreis, insgesamtVerkauft);
+}
+
+async function calculateSellingPrice(coinAmount) {
+  const unitPrice = await calculateCoinPrice();
+  const totalPrice = unitPrice * coinAmount;
+
+  return {
+    coinAmount: parseInt(coinAmount),
+    unitPrice: parseFloat(unitPrice.toFixed(2)),
+    totalPrice: parseFloat(totalPrice.toFixed(2)),
+    currency: 'EUR'
+  };
+}
+
+async function checkDailyLimit(totalPrice) {
+  const purchases = await readJsonFile(FILES.purchases) || [];
+  const today = getLondonMidnightISOString();
+  const todaysPurchases = purchases.filter(p => p.timestamp.startsWith(today));
+  const dailyTotal = todaysPurchases.reduce((sum, p) => sum + (p.totalPrice || 0), 0);
+  return {
+    allowed: (dailyTotal + totalPrice) <= 500000,
+    dailyTotal: dailyTotal.toFixed(2),
+    limit: 500000
+  };
+}
+
+async function appendToCSV(purchase) {
+  const csvWriter = createObjectCsvWriter({
+    path: FILES.purchasesCsv,
+    header: [
+      { id: 'id', title: 'ID' },
+      { id: 'walletAddress', title: 'Wallet Address' },
+      { id: 'walletType', title: 'Wallet Type' },
+      { id: 'buyerEmail', title: 'Buyer Email' },
+      { id: 'coinAmount', title: 'Coin Amount' },
+      { id: 'totalPrice', title: 'Total Price (€)' },
+      { id: 'paymentMethod', title: 'Payment Method' },
+      { id: 'paypalOrderId', title: 'PayPal Order ID' },
+      { id: 'timestamp', title: 'Timestamp' }
+    ],
+    append: fsSync.existsSync(FILES.purchasesCsv)
+  });
+
+  await csvWriter.writeRecords([purchase]);
+}
+
+async function savePurchase(purchase) {
+  const purchases = await readJsonFile(FILES.purchases) || [];
+  purchases.push(purchase);
+  await writeJsonFile(FILES.purchases, purchases);
+  await appendToCSV(purchase);
+
+  const stats = await readJsonFile(FILES.stats) || { totalRaisedEur: 0 };
+  stats.totalRaisedEur += purchase.totalPrice;
+  await writeJsonFile(FILES.stats, stats);
+}
+
+app.post('/api/purchase', async (req, res) => {
+  try {
+    const { walletAddress, walletType, buyerEmail, coinAmount, paymentMethod, paypalOrderId } = req.body;
+
+    if (!walletAddress || !walletType || !buyerEmail || !coinAmount || !paymentMethod || !paypalOrderId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const pricing = await calculateSellingPrice(coinAmount);
+    const dailyLimit = await checkDailyLimit(pricing.totalPrice);
+    if (!dailyLimit.allowed) {
+      return res.status(400).json({ error: `Tageslimit erreicht. Heute wurden bereits €${dailyLimit.dailyTotal} verkauft.` });
+    }
+
+    const purchase = {
+      id: uuidv4(),
+      walletAddress,
+      walletType,
+      buyerEmail,
+      coinAmount: pricing.coinAmount,
+      totalPrice: pricing.totalPrice,
+      paymentMethod,
+      paypalOrderId,
+      timestamp: new Date().toISOString()
     };
-}
 
-// Kauf validieren
-async function validatePurchase(coinAmount, walletAddress) {
-    const config = await getCurrentConfig();
-    
-    const errors = [];
-    
-    if (!walletAddress) {
-        errors.push('Wallet-Adresse ist erforderlich');
-    }
-    
-    if (!coinAmount || coinAmount < config.minimumPurchase) {
-        errors.push(`Mindestbestellmenge: ${config.minimumPurchase} BLOXXER Coins`);
-    }
-    
-    if (coinAmount > config.maximumPurchase) {
-        errors.push(`Maximale Bestellmenge: ${config.maximumPurchase} BLOXXER Coins`);
-    }
-    
-    // Presale-Ende prüfen
-    if (new Date() > new Date(config.presaleEndDate)) {
-        errors.push('Presale ist beendet');
-    }
-    
-    return {
-        isValid: errors.length === 0,
-        errors
-    };
-}
+    await savePurchase(purchase);
+    res.json({ success: true, purchase });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-// Statistiken aktualisieren
-async function updateStats(coinAmount, totalPrice) {
-    const stats = await readJsonFile(FILES.stats);
-    if (stats) {
-        stats.totalCoinsSold += coinAmount;
-        stats.totalRaisedEur += totalPrice;
-        stats.totalPurchases += 1;
-        stats.lastUpdated = new Date().toISOString();
-        
-        await writeJsonFile(FILES.stats, stats);
-        return stats;
-    }
-    return null;
-}
-
-// Kauf in Datenbank speichern
-async function savePurchase(purchaseData) {
-    const purchases = await readJsonFile(FILES.purchases) || [];
-    
-    const newPurchase = {
-        id: generateId(),
-        ...purchaseData,
-        timestamp: new Date().toISOString(),
-        status: 'completed'
-    };
-    
-    purchases.push(newPurchase);
-    
-    const saved = await writeJsonFile(FILES.purchases, purchases);
-    if (!saved) {
-        throw new Error('Fehler beim Speichern des Kaufs');
-    }
-    
-    return newPurchase;
-}
-
-// Vollständige Kaufabwicklung
-async function processPurchase(purchaseData) {
-    const { wallet_address, coin_amount, payment_method, buyer_email, wallet_type, paypal_order_id } = purchaseData;
-    
-    // 1. Validierung
-    const validation = await validatePurchase(coin_amount, wallet_address);
-    if (!validation.isValid) {
-        throw new Error(validation.errors.join(', '));
-    }
-    
-    // 2. Preis berechnen
-    const pricing = await calculateCoinPrice(coin_amount);
-    
-    // 3. Kauf speichern
-    const savedPurchase = await savePurchase({
-        walletAddress: wallet_address,
-        walletType: wallet_type || 'unknown',
-        buyerEmail: buyer_email || null,
-        coinAmount: pricing.coinAmount,
-        totalPrice: pricing.totalPrice,
-        paymentMethod: payment_method,
-        paypalOrderId: paypal_order_id || null
-    });
-    
-    // 4. Statistiken aktualisieren
-    await updateStats(pricing.coinAmount, pricing.totalPrice);
-    
-    return {
-        purchase: savedPurchase,
-        pricing
-    };
-}
-
-// ===========================================
-// PAYPAL FUNCTIONS
-// ===========================================
-
-// PayPal Order erstellen
-async function createPayPalOrder(coinAmount, currency = 'EUR') {
-    const pricing = await calculateCoinPrice(coinAmount);
-    
-    const collect = {
+// PayPal Order erstellen + erfassen
+async function createPayPalOrder(coinAmount, currency = "EUR") {
+    const pricing = await calculateSellingPrice(coinAmount);
+    const order = {
         body: {
             intent: "CAPTURE",
             purchaseUnits: [
@@ -230,402 +207,94 @@ async function createPayPalOrder(coinAmount, currency = 'EUR') {
                     amount: {
                         currencyCode: currency,
                         value: pricing.totalPrice.toString(),
-                        breakdown: {
-                            itemTotal: {
-                                currencyCode: currency,
-                                value: pricing.totalPrice.toString(),
-                            },
-                        },
+                        breakdown: { itemTotal: { currencyCode: currency, value: pricing.totalPrice.toString() } }
                     },
                     items: [
                         {
                             name: "BLOXXER Coins",
-                            unitAmount: {
-                                currencyCode: currency,
-                                value: pricing.unitPrice.toString(),
-                            },
+                            unitAmount: { currencyCode: currency, value: pricing.unitPrice.toString() },
                             quantity: pricing.coinAmount.toString(),
-                            description: `${pricing.coinAmount} BLOXXER Coins zum Presale-Preis`,
-                            sku: "BLOXXER_COIN",
-                        },
-                    ],
-                },
-            ],
+                            description: `${pricing.coinAmount} BLOXXER Coins`,
+                            sku: "BLOXXER_COIN"
+                        }
+                    ]
+                }
+            ]
         },
-        prefer: "return=minimal",
+        prefer: "return=minimal"
     };
-
-    try {
-        const { body, ...httpResponse } = await ordersController.createOrder(collect);
-        return {
-            jsonResponse: JSON.parse(body),
-            httpStatusCode: httpResponse.statusCode,
-            pricing
-        };
-    } catch (error) {
-        if (error instanceof ApiError) {
-            throw new Error(`PayPal API Error: ${error.message}`);
-        }
-        throw error;
-    }
+    const { body } = await ordersController.createOrder(order);
+    return { jsonResponse: JSON.parse(body), pricing };
 }
 
-// PayPal Order erfassen
 async function capturePayPalOrder(orderID) {
-    const collect = {
-        id: orderID,
-        prefer: "return=minimal",
-    };
-
-    try {
-        const { body, ...httpResponse } = await ordersController.captureOrder(collect);
-        return {
-            jsonResponse: JSON.parse(body),
-            httpStatusCode: httpResponse.statusCode,
-        };
-    } catch (error) {
-        if (error instanceof ApiError) {
-            throw new Error(`PayPal Capture Error: ${error.message}`);
-        }
-        throw error;
-    }
+    const { body } = await ordersController.captureOrder({ id: orderID, prefer: "return=minimal" });
+    return JSON.parse(body);
 }
 
-// ===========================================
-// INITIALIZATION
-// ===========================================
-
-async function initializeData() {
+// API Routen
+app.post("/api/paypal/create-order", async (req, res) => {
     try {
-        await fs.mkdir(DATA_DIR, { recursive: true });
-
-        const defaultConfig = {
-            coinPrice: 0.05,
-            presaleEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-            minimumPurchase: 100,
-            maximumPurchase: 1000000
-        };
-
-        const defaultStats = {
-            totalCoinsSold: 125000,
-            totalRaisedEur: 6250.00,
-            totalPurchases: 0,
-            lastUpdated: new Date().toISOString()
-        };
-
-        for (const [key, filePath] of Object.entries(FILES)) {
-            try {
-                await fs.access(filePath);
-            } catch (error) {
-                let defaultData = [];
-                if (key === 'stats') defaultData = defaultStats;
-                if (key === 'config') defaultData = defaultConfig;
-                
-                await writeJsonFile(filePath, defaultData);
-                console.log(`Datei erstellt: ${filePath}`);
-            }
-        }
-
-        console.log('Dateninitialisierung abgeschlossen');
-    } catch (error) {
-        console.error('Fehler bei Dateninitialisierung:', error);
+        const { coin_amount } = req.body;
+        const { jsonResponse, pricing } = await createPayPalOrder(coin_amount);
+        res.json({ success: true, data: { paypal_order: jsonResponse, pricing } });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
-}
+});
 
-// ===========================================
-// API ROUTES
-// ===========================================
+app.post("/api/paypal/capture-order", async (req, res) => {
+    try {
+        const { paypal_order_id, wallet_address, wallet_type, buyer_email, coin_amount } = req.body;
+        const captured = await capturePayPalOrder(paypal_order_id);
+        if (captured.status !== "COMPLETED") throw new Error("PayPal-Zahlung nicht abgeschlossen");
+        const { purchase } = await processPurchase({ paypal_order_id, wallet_address, wallet_type, buyer_email, coin_amount, payment_method: "paypal" });
+        res.json({ success: true, data: { purchase_id: purchase.id, wallet_address: maskWalletAddress(wallet_address), timestamp: purchase.timestamp } });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 
-// GET /api/stats - Statistiken abrufen
-app.get('/api/stats', async (req, res) => {
+app.get("/api/stats", async (req, res) => {
     try {
         const stats = await readJsonFile(FILES.stats);
         const config = await readJsonFile(FILES.config);
-        
-        if (!stats || !config) {
-            return res.status(500).json({
-                success: false,
-                error: 'Fehler beim Laden der Statistiken'
-            });
-        }
-
-        res.json({
-            success: true,
-            data: {
-                total_coins_sold: stats.totalCoinsSold,
-                total_raised_eur: stats.totalRaisedEur,
-                total_purchases: stats.totalPurchases,
-                coin_price: config.coinPrice,
-                presale_end_date: config.presaleEndDate,
-                minimum_purchase: config.minimumPurchase,
-                maximum_purchase: config.maximumPurchase,
-                last_updated: stats.lastUpdated
-            }
-        });
-    } catch (error) {
-        console.error('Fehler bei /api/stats:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Serverfehler beim Laden der Statistiken'
-        });
+        const theCoinPrice = await calculateCoinPrice();
+        console.log(theCoinPrice);
+        res.json({ success: true, data: { ...stats, coin_price: theCoinPrice, presale_end_date: config.presaleEndDate } });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
-// GET /api/config - Konfiguration abrufen
-app.get('/api/config', async (req, res) => {
-    try {
-        const config = await getCurrentConfig();
-        res.json({
-            success: true,
-            data: config
-        });
-    } catch (error) {
-        console.error('Fehler bei /api/config:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// POST /api/calculate-price - Preis berechnen (für Frontend)
-app.post('/api/calculate-price', async (req, res) => {
-    try {
-        const { coin_amount } = req.body;
-        
-        if (!coin_amount || coin_amount <= 0) {
-            return res.status(400).json({
-                success: false,
-                error: 'Ungültige Coin-Anzahl'
-            });
+// Initialisierung
+async function initializeData() {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    const defaults = {
+        config: {
+            coinStartPrice: 0.02,
+            coinEndPrice: 0.10,
+            fundingGoal: 5500000,
+            presaleEndDate: new Date(Date.now() + 30 * 86400000).toISOString(),
+            minimumPurchase: 100,
+            maximumPurchase: 1000000
+        },
+        stats: {
+            totalCoinsSold: 0,
+            totalRaisedEur: 0,
+            totalPurchases: 0,
+            lastUpdated: new Date().toISOString()
         }
-
-        const pricing = await calculateCoinPrice(coin_amount);
-        
-        res.json({
-            success: true,
-            data: pricing
-        });
-    } catch (error) {
-        console.error('Fehler bei /api/calculate-price:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// POST /api/validate-purchase - Kauf validieren (für Frontend)
-app.post('/api/validate-purchase', async (req, res) => {
-    try {
-        const { coin_amount, wallet_address } = req.body;
-        
-        const validation = await validatePurchase(coin_amount, wallet_address);
-        
-        if (validation.isValid) {
-            const pricing = await calculateCoinPrice(coin_amount);
-            res.json({
-                success: true,
-                valid: true,
-                data: pricing
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                valid: false,
-                errors: validation.errors
-            });
-        }
-    } catch (error) {
-        console.error('Fehler bei /api/validate-purchase:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// ===========================================
-// PAYPAL ROUTES
-// ===========================================
-
-// POST /api/paypal/create-order - PayPal Order erstellen
-app.post('/api/paypal/create-order', async (req, res) => {
-    try {
-        const { coin_amount } = req.body;
-        
-        if (!coin_amount || coin_amount <= 0) {
-            return res.status(400).json({
-                success: false,
-                error: 'Ungültige Coin-Anzahl'
-            });
-        }
-
-        // Validierung vor PayPal Order
-        const validation = await validatePurchase(coin_amount, 'temp'); // Wallet wird später validiert
-        if (!validation.isValid) {
-            return res.status(400).json({
-                success: false,
-                error: validation.errors.join(', ')
-            });
-        }
-
-        const { jsonResponse, httpStatusCode, pricing } = await createPayPalOrder(coin_amount);
-        
-        res.status(httpStatusCode).json({
-            success: true,
-            data: {
-                paypal_order: jsonResponse,
-                pricing: pricing
-            }
-        });
-    } catch (error) {
-        console.error('Fehler bei PayPal Order erstellen:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// POST /api/paypal/capture-order - PayPal Order erfassen und Kauf abschließen
-app.post('/api/paypal/capture-order', async (req, res) => {
-    try {
-        const { 
-            paypal_order_id, 
-            wallet_address, 
-            wallet_type, 
-            buyer_email, 
-            coin_amount 
-        } = req.body;
-
-        if (!paypal_order_id || !wallet_address || !coin_amount) {
-            return res.status(400).json({
-                success: false,
-                error: 'Fehlende erforderliche Felder'
-            });
-        }
-
-        // 1. PayPal Order erfassen
-        const { jsonResponse, httpStatusCode } = await capturePayPalOrder(paypal_order_id);
-        
-        if (httpStatusCode !== 201 || jsonResponse.status !== 'COMPLETED') {
-            return res.status(400).json({
-                success: false,
-                error: 'PayPal-Zahlung konnte nicht abgeschlossen werden'
-            });
-        }
-
-        // 2. Kauf verarbeiten
-        const { purchase, pricing } = await processPurchase({
-            wallet_address,
-            wallet_type,
-            buyer_email,
-            coin_amount: parseInt(coin_amount),
-            payment_method: 'paypal',
-            paypal_order_id
-        });
-
-        res.json({
-            success: true,
-            data: {
-                purchase_id: purchase.id,
-                coins_purchased: purchase.coinAmount,
-                total_price: purchase.totalPrice,
-                wallet_address: maskWalletAddress(wallet_address),
-                timestamp: purchase.timestamp,
-                paypal_order_id: paypal_order_id
-            },
-            message: 'Kauf erfolgreich über PayPal abgeschlossen'
-        });
-
-        console.log(`PayPal Kauf: ${purchase.coinAmount} BLOXXER für €${purchase.totalPrice} (${maskWalletAddress(wallet_address)})`);
-
-    } catch (error) {
-        console.error('Fehler bei PayPal Capture:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// ===========================================
-// DIRECT PURCHASE ROUTE (für andere Zahlungsmethoden)
-// ===========================================
-
-// POST /api/purchases - Direkter Kauf (z.B. für Krypto-Zahlungen)
-app.post('/api/purchases', async (req, res) => {
-    try {
-        const {
-            wallet_address,
-            wallet_type,
-            buyer_email,
-            coin_amount,
-            payment_method
-        } = req.body;
-
-        if (!wallet_address || !coin_amount || !payment_method) {
-            return res.status(400).json({
-                success: false,
-                error: 'Fehlende erforderliche Felder'
-            });
-        }
-
-        const { purchase, pricing } = await processPurchase({
-            wallet_address,
-            wallet_type,
-            buyer_email,
-            coin_amount: parseInt(coin_amount),
-            payment_method
-        });
-
-        res.json({
-            success: true,
-            data: {
-                purchase_id: purchase.id,
-                coins_purchased: purchase.coinAmount,
-                total_price: purchase.totalPrice,
-                wallet_address: maskWalletAddress(wallet_address),
-                timestamp: purchase.timestamp
-            },
-            message: 'Kauf erfolgreich verarbeitet'
-        });
-
-        console.log(`Direkter Kauf: ${purchase.coinAmount} BLOXXER für €${purchase.totalPrice} (${maskWalletAddress(wallet_address)})`);
-
-    } catch (error) {
-        console.error('Fehler bei direktem Kauf:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
-});
-
-// Health Check
-app.get('/api/health', (req, res) => {
-    res.json({
-        success: true,
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime()
-    });
-});
-
-// Server starten
-async function startServer() {
-    await initializeData();
-    
-    app.listen(PORT, () => {
-        console.log(`🚀 BLOXXER Backend Server läuft auf Port ${PORT}`);
-        console.log(`📁 Daten werden gespeichert in: ${DATA_DIR}`);
-        console.log(`🌐 API verfügbar unter: http://localhost:${PORT}/api/`);
-        console.log(`💳 PayPal Integration: ${PAYPAL_CLIENT_ID ? 'Aktiviert' : 'Nicht konfiguriert'}`);
-    });
+    };
+    if (!fsSync.existsSync(FILES.config)) await writeJsonFile(FILES.config, defaults.config);
+    if (!fsSync.existsSync(FILES.stats)) await writeJsonFile(FILES.stats, defaults.stats);
+    if (!fsSync.existsSync(FILES.purchases)) await writeJsonFile(FILES.purchases, []);
+    if (!fsSync.existsSync(FILES.purchasesCsv)) await fs.writeFile(FILES.purchasesCsv, "ID,Wallet Address,Wallet Type,Buyer Email,Coin Amount,Total Price,Payment Method,PayPal Order ID,Timestamp\n");
 }
 
-startServer().catch(error => {
-    console.error('Fehler beim Starten des Servers:', error);
-    process.exit(1);
+// Start Server
+initializeData().then(() => {
+    app.listen(PORT, () => {
+        console.log(`BLOXXER Server läuft auf http://localhost:${PORT}`);
+    });
 });

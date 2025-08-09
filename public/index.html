@@ -543,7 +543,7 @@
                     <div class="stat-label">Verbleibend</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value"></div>
+                    <div class="stat-value" id="coinPrice"></div>
                     <div class="stat-label">Presale Preis</div>
                 </div>
             </div>
@@ -766,8 +766,12 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('totalSold').textContent = data.data.total_coins_sold.toLocaleString();
-                        document.getElementById('totalRaised').textContent = '€' + data.data.total_raised_eur.toLocaleString();
+                        console.log(data)
+                        presaleEnd = new Date(data.data.presale_end_date).getTime();
+                        updateCountdown();
+                        document.getElementById('totalSold').textContent = data.data.totalCoinsSold.toLocaleString();
+                        document.getElementById('totalRaised').textContent = '€' + data.data.totalRaisedEur.toLocaleString();
+                        document.getElementById('coinPrice').textContent = '€' + data.data.coin_price.toLocaleString(undefined, { minimumFractionDigits: 6 });
                     }
                 });
         }
@@ -1128,14 +1132,6 @@
 
         // Initial Setup beim Laden der Seite
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/stats')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        presaleEnd = new Date(data.data.presale_end_date).getTime();
-                        updateCountdown();
-                    }
-                });
             animateStats();
             calculatePrice();
             renderPurchasesList();
