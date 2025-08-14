@@ -1,4 +1,9 @@
 {
+<<<<<<< HEAD
   "date": "2025-08-09",
   "price": 0.020004
+=======
+  "date": "2025-08-13",
+  "price": 0.025
+>>>>>>> a689973 (Preisberechnung und Paypal Kompatibilität mit ganzen Centbeträgen)
 }

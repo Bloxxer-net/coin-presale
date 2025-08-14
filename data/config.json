@@ -1,5 +1,6 @@
 
 {
+<<<<<<< HEAD
   "coinStartPrice": 0.02,
   "coinEndPrice": 0.10,
   "fundingGoal": 1000000,
@@ -12,3 +13,12 @@
     "sandbox": true
   }
 }
+=======
+  "coinStartPrice": 0.025,
+  "coinEndPrice": 0.1,
+  "fundingGoal": 5500000,
+  "presaleEndDate": "2025-09-12T15:29:52.471Z",
+  "minimumPurchase": 5,
+  "maximumPurchase": 500000
+}
+>>>>>>> a689973 (Preisberechnung und Paypal Kompatibilität mit ganzen Centbeträgen)

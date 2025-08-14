@@ -448,85 +448,11 @@
 </head>
 <body>
     <div class="container">
-        <div class="form-group">
-            <label>Wallet auswählen oder erstellen</label>
-            <div class="wallet-section">
-                <div class="wallet-options">
-                    <button type="button" class="wallet-btn" onclick="connectMetaMask()">
-                        🦊 MetaMask verbinden
-                    </button>
-                    <button type="button" class="wallet-btn" onclick="connectWalletConnect()">
-                        🔗 WalletConnect
-                    </button>
-                    <button type="button" class="wallet-btn" onclick="showWalletGenerator()">
-                        ✨ Neue Wallet erstellen
-                    </button>
-                    <button type="button" class="wallet-btn secondary" onclick="showManualInput()">
-                        ⌨️ Adresse eingeben
-                    </button>
-                </div>
-                
-                <div id="walletStatus" class="wallet-status hidden">
-                    <div class="connected-wallet">
-                        <span class="status-icon">✅</span>
-                        <div>
-                            <strong>Wallet verbunden:</strong><br>
-                            <code id="connectedAddress"></code>
-                            <button onclick="disconnectWallet()" class="disconnect-btn">Trennen</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="walletGenerator" class="wallet-generator hidden">
-                    <div class="generator-content">
-                        <h4>🔐 Neue Ethereum Wallet erstellen</h4>
-                        <div class="generated-wallet">
-                            <div class="wallet-info">
-                                <label>Ihre neue Wallet-Adresse:</label>
-                                <input type="text" id="generatedAddress" readonly class="generated-field">
-                            </div>
-                            <div class="wallet-info">
-                                <label>Private Key (SICHER AUFBEWAHREN!):</label>
-                                <input type="password" id="generatedPrivateKey" readonly class="generated-field">
-                                <button type="button" onclick="togglePrivateKeyVisibility()" class="show-key-btn">👁️ Anzeigen</button>
-                            </div>
-                            <div class="wallet-info">
-                                <label>Seed Phrase (SICHER AUFBEWAHREN!):</label>
-                                <textarea id="generatedSeedPhrase" readonly class="generated-field" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="wallet-warning">
-                            ⚠️ <strong>WICHTIG:</strong> Bewahren Sie Private Key und Seed Phrase sicher auf! 
-                            Ohne diese können Sie nicht auf Ihre Wallet zugreifen. Teilen Sie diese niemals mit anderen!
-                        </div>
-                        <div class="generator-actions">
-                            <button onclick="downloadWalletInfo()" class="wallet-btn">📥 Wallet-Info herunterladen</button>
-                            <button onclick="useGeneratedWallet()" class="wallet-btn primary">✅ Diese Wallet verwenden</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="manualWalletInput" class="manual-input hidden">
-                    <div class="form-group">
-                        <label for="walletAddress">Wallet-Adresse manuell eingeben:</label>
-                        <input type="text" id="walletAddress" placeholder="0x... (Ethereum) oder andere Wallet-Adresse">
-                        <button type="button" onclick="validateManualWallet()" class="wallet-btn">✅ Adresse verwenden</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="buyerEmail">E-Mail für Bestätigung (optional)</label>
-            <input type="email" id="buyerEmail" placeholder="ihre@email.de">
-        </div>
-    </div>
-    <div class="container">
         <div class="header">
-            <h1>🚀 BLOXXER COIN</h1>
+            <h1>BLOXXER COIN</h1>
             <p class="subtitle">
-                Revolutionäre KI-Plattform für eine Open Company der Zukunft<br>
-                Gemeinsam erschaffen wir die Welt von morgen - Ein Coin, eine Vision, unendliche Möglichkeiten
+                KI-Plattform mit eigenem "Active Listening" Mechanismus (NLP Graph Builder und LLM-Embedding) zum gemeinsamen Aufbau von Weltwissen und Konsens<br>
+                Gemeinsam arbeiten unter einer Open Company und gemeinsam verdienen unter einer Coin!
             </p>
             
             <div class="stats">
@@ -540,19 +466,25 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="timeLeft"></div>
-                    <div class="stat-label">Verbleibend</div>
+                    <div class="stat-label">Verbleibend bis täglicher Preisberechnung</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value" id="coinPrice"></div>
-                    <div class="stat-label">Presale Preis</div>
+                    <div class="stat-label">Presale Tages-Preis</div>
                 </div>
             </div>
         </div>
 
         <div class="main-content">
             <div class="info-section">
-                <h2>🌟 Die Vision</h2>
-                <p>BLOXXER Coin ist mehr als nur eine Kryptowährung - es ist der Schlüssel zu einer revolutionären KI-Plattform, die eine echte Open Company ermöglicht. Jeder Coin-Inhaber wird Teil einer globalen Gemeinschaft, die gemeinsam an Projekten für eine bessere Welt arbeitet.</p>
+                <h2>Die Vision</h2>
+                <p>BLOXXER Coin ist der Auftakt zu einer revolutionären KI-Plattform, die eine echte Open Company ermöglicht. Stellen Sie sich eine globale Gemeinschaft vor, die gemeinsam Konsensstrukturen und Weltwissen aufbaut und an Projekten für eine bessere Welt arbeitet. Angefangen mit unserem "Active Listening" NLP Algorithmus erschaffen wir gemeinsam ein KI Ökosystem mit eigener Coin und Governance Struktur, worin der gesamte Gewinn zurück in die Coinbase fließen wird.</p>
+                <br>
+                <h2>Der Weg dahin</h2>
+                <p>Die Realisierung einer solchen Coin ist mit hohem finanzrechtlichem und technologischem Aufwand verbunden. Deshalb starten wir als Crowdfunding diesen Memecoin, die BLOXXER Coin. Die Finanzierung der Entwicklung der dafür notwendingen Blockchain- und KI- Technologie, sowie der Aufbau einer starken Community in Form eines KI Zentrums, soll damit realisiert werden. Der Name des Memecoins kann sich bis zum Launch noch ändern.</p>
+                <br>
+                <h2>Presale</h2>
+                <p>Es werden €5,5 Mio. gesammelt, €5 Mio. für den Liquiditypool und €0,5 Mio. für den Aufbau der Plattform. Der Preis wird täglich neu berechnet, startend von €0,025 pro Coin und endend im Launchpreis von €0,10. Maximal werden pro Tag Coins im Wert von €500.000 zum Tagespreis verkauft. Dies ermöglicht einen sicheren Aufbau eines soliden Liquiditypools, ohne Zeitdruck (5 Mio. Euro, 50 Mio. BLOXXER Coins im Pool von 500 Mio. Coins insgesamt, €0,10 Startpreis pro Coin, Startzeitpunkt: Wenn 5,5 Mio. Euro gesammelt wurden). Die erworbenen Coins werden 7 Tage nach Launch des Memecoins auf die zugeordneten Wallets übertragen, um einen starken Start zu fördern.</p>
 
                 <div class="features">
                     <h3>✨ Einzigartige Features</h3>
@@ -589,16 +521,16 @@
                 <div class="roadmap">
                     <h3>🗺️ Roadmap</h3>
                     <div class="roadmap-item">
-                        <strong>Q1 2025:</strong> Presale Launch & Community Building
+                        <strong>Q3 2025:</strong> Presale Launch & Community Building
                     </div>
                     <div class="roadmap-item">
-                        <strong>Q2 2025:</strong> KI-Plattform Beta & Token Launch
+                        <strong>Q4 2025:</strong> KI-Plattform Beta & Token Launch
                     </div>
                     <div class="roadmap-item">
-                        <strong>Q3 2025:</strong> Open Company Integration
+                        <strong>Q1 2026:</strong> Open Company Integration
                     </div>
                     <div class="roadmap-item">
-                        <strong>Q4 2025:</strong> Globale Expansion & Partnerships
+                        <strong>Q2 2026:</strong> Globale Expansion & Partnerships
                     </div>
                 </div>
             </div>
@@ -613,9 +545,85 @@
                             <input type="number" id="coinAmount" min="100" max="1000000" value="1000" oninput="calculatePrice()">
                         </div>
                         <div class="price-display" id="totalPrice">
-                            Gesamt: €50.00
+                            Gesamt:
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label>Wallet auswählen oder erstellen</label>
+                        <div class="wallet-section">
+                            <div class="wallet-options">
+                                <button id="connectBtn" type="button" class="wallet-btn">
+                                    Wallet verbinden
+                                </button>
+                                <!--button type="button" class="wallet-btn" onclick="connectMetaMask()">
+                                    🦊 MetaMask verbinden
+                                </button>
+                                <button type="button" class="wallet-btn" onclick="connectWalletConnect()">
+                                    🔗 WalletConnect
+                                </button-->
+                                <button type="button" class="wallet-btn" onclick="showWalletGenerator()">
+                                    ✨ Neue Wallet erstellen
+                                </button>
+                                <button type="button" class="wallet-btn secondary" onclick="showManualInput()">
+                                    ⌨️ Adresse eingeben
+                                </button>
+                            </div>
+                            <div id="walletStatus" class="wallet-status hidden">
+                                <div class="connected-wallet">
+                                    <span class="status-icon">✅</span>
+                                    <div>
+                                        <strong>Wallet verbunden:</strong><br>
+                                        <code id="connectedAddress"></code>
+                                        <button onclick="disconnectWallet()" class="disconnect-btn">Trennen</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="walletGenerator" class="wallet-generator hidden">
+                                <div class="generator-content">
+                                    <h4>🔐 Neue Ethereum Wallet erstellen</h4>
+                                    <div class="generated-wallet">
+                                        <div class="wallet-info">
+                                            <label>Ihre neue Wallet-Adresse:</label>
+                                            <input type="text" id="generatedAddress" readonly class="generated-field">
+                                        </div>
+                                        <div class="wallet-info">
+                                            <label>Private Key (SICHER AUFBEWAHREN!):</label>
+                                            <input type="password" id="generatedPrivateKey" readonly class="generated-field">
+                                            <button type="button" onclick="togglePrivateKeyVisibility()" class="show-key-btn">👁️ Anzeigen</button>
+                                        </div>
+                                        <div class="wallet-info">
+                                            <label>Seed Phrase (SICHER AUFBEWAHREN!):</label>
+                                            <textarea id="generatedSeedPhrase" readonly class="generated-field" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="wallet-warning">
+                                        ⚠️ <strong>WICHTIG:</strong> Bewahren Sie Private Key und Seed Phrase sicher auf! 
+                                        Ohne diese können Sie nicht auf Ihre Wallet zugreifen. Teilen Sie diese niemals mit anderen!
+                                    </div>
+                                    <div class="generator-actions">
+                                        <button onclick="downloadWalletInfo()" class="wallet-btn">📥 Wallet-Info herunterladen</button>
+                                        <button onclick="useGeneratedWallet()" class="wallet-btn primary">✅ Diese Wallet verwenden</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="manualWalletInput" class="manual-input hidden">
+                                <div class="form-group">
+                                    <label for="walletAddress">Wallet-Adresse manuell eingeben:</label>
+                                    <input type="text" id="walletAddress" placeholder="0x... (Ethereum) oder andere Wallet-Adresse">
+                                    <button type="button" onclick="validateManualWallet()" class="wallet-btn">✅ Adresse verwenden</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buyerEmail">E-Mail für Bestätigung (optional)</label>
+                        <input type="email" id="buyerEmail" placeholder="ihre@email.de">
+                    </div>
+
 
                     <div id= "purchase-container" class="form-group" style="display:none;">
                         <div id = "confirmation-section">
@@ -639,19 +647,30 @@
 
                 <!-- Käuferliste -->
                 <div style="margin-top: 30px; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);">
-                    <h2>📈 Live Käufe</h2>
+                    <h2>📈 Live Käufe</h2><br><br>
                     <div id="purchasesList" style="max-height: 400px; overflow-y: auto;">
                         <!-- Käufe werden hier angezeigt -->
                     </div>
-                    <div style="text-align: center; margin-top: 20px;">
+                    <!--div style="text-align: center; margin-top: 20px;">
                         <button onclick="togglePurchasesList()" id="toggleBtn" class="social-btn google-btn" style="padding: 10px 20px;">
                             Alle Käufe anzeigen
                         </button>
-                    </div>
+                    </div-->
                 </div>
             </div>
         </div>
     </div>
+    <div id="cookie-banner" style="position: fixed; bottom: 0; left: 0; right: 0; background: #222; color: white; padding: 10px; text-align: center;">
+    Diese Website verwendet Cookies, um die Zahlung mit PayPal zu ermöglichen.
+    <button onclick="acceptCookies()" style="margin-left: 10px; padding: 5px 10px;">Akzeptieren</button>
+    </div>
+
+    <script>
+    function acceptCookies() {
+    document.cookie = "cookiesAccepted=true; path=/; max-age=" + (60*60*24*365);
+    document.getElementById('cookie-banner').style.display = 'none';
+    }
+    </script>
 
     <!--AeM3BGBEsxW-QG_DlCWQI1ExN7kZXhHnULlFM1j7iNiImlk4rr5EC6KLTrSbg0hUDf6C9eI9X2QnWVI5-->
     <script src="https://www.paypal.com/sdk/js?client-id=AYMqYZz7OJLIapxCyaNss23w73eOpE83loIlOM7N6Q6YpmLhXOJWw9qGTvymwIsZNCR4rcWm8DRd8i1Z&currency=EUR"></script>
@@ -699,8 +718,8 @@
                     body: JSON.stringify({
                         paypal_order_id: data.orderID,
                         wallet_address: wallet,
-                        buyer_email: email,
-                        coin_amount: coinAmount
+                        buyer_email: email
+                        // coin_amount: coinAmount
                     })
                 })
                 .then(res => res.json())
@@ -722,11 +741,11 @@
                 .then(data => {
                     if (data.success) {
                         purchases = data.data.map(item => ({
-                            wallet: item.masked_wallet,
-                            amount: item.coin_amount,
-                            price: item.price_eur,
-                            method: item.payment_method,
-                            time: item.time_ago,
+                            wallet: item.walletAddress,
+                            amount: item.coinAmount,
+                            price: item.totalPrice,
+                            method: item.paymentMethod,
+                            time: item.timestamp,
                             email: 'anonymous' // keine E-Mail aus Datenschutzgründen anzeigen
                         }));
                         renderPurchasesList();
@@ -736,26 +755,30 @@
 
         // Timer für Countdown
         function updateCountdown() {
-            if (!presaleEnd) return;
-            const now = new Date().getTime();
-            const timeLeft = presaleEnd - now;
+            const now = new Date();
 
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            // London-Zeit berechnen
+            // London ist entweder UTC+0 oder UTC+1 (Sommerzeit)
+            const londonOffset = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour12: false });
+            const [datePart, timePart] = londonOffset.split(", ");
+            const [hours, minutes, seconds] = timePart.split(":").map(Number);
 
-                document.getElementById('timeLeft').textContent = 
-                    (days > 0 ? days + 'd ' : '') + 
-                    String(hours).padStart(2, '0') + ':' + 
-                    String(minutes).padStart(2, '0') + ':' + 
-                    String(seconds).padStart(2, '0');
-            } else {
-                document.getElementById('timeLeft').textContent = 'Presale beendet';
-            }
+            const nowLondon = new Date();
+            nowLondon.setHours(hours, minutes, seconds, 0);
+
+            // nächste Mitternacht in London
+            const midnightLondon = new Date(nowLondon);
+            midnightLondon.setHours(24, 0, 0, 0);
+
+            const diff = midnightLondon - nowLondon;
+
+            const h = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+            const m = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+            const s = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+
+            document.getElementById("timeLeft").textContent = `${h}:${m}:${s}`;
         }
-
+        
         // Countdown alle Sekunde aktualisieren
         setInterval(updateCountdown, 1000);
         updateCountdown();
@@ -771,47 +794,13 @@
                         updateCountdown();
                         document.getElementById('totalSold').textContent = data.data.totalCoinsSold.toLocaleString();
                         document.getElementById('totalRaised').textContent = '€' + data.data.totalRaisedEur.toLocaleString();
-                        document.getElementById('coinPrice').textContent = '€' + data.data.coin_price.toLocaleString(undefined, { minimumFractionDigits: 6 });
+                        coinPrice =  data.data.coin_price;
+                        console.log(coinPrice);
+                        document.getElementById('coinPrice').textContent = '€' + coinPrice.toLocaleString(undefined, { minimumFractionDigits: 6 });
+                        calculatePrice();
+                        renderPurchasesList();
                     }
                 });
-        }
-
-        // Wallet-Funktionen
-        async function connectMetaMask() {
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    if (accounts.length > 0) {
-                        connectedWallet = {
-                            address: accounts[0],
-                            type: 'MetaMask'
-                        };
-                        showConnectedWallet();
-                    }
-                } catch (error) {
-                    alert('Fehler beim Verbinden mit MetaMask: ' + error.message);
-                }
-            } else {
-                // MetaMask nicht installiert - zeige Anleitung
-                const install = confirm(
-                    'MetaMask ist nicht installiert!\n\n' +
-                    'MetaMask ist eine kostenlose Browser-Erweiterung für Ethereum.\n' +
-                    'Möchten Sie zur MetaMask-Website weitergeleitet werden?'
-                );
-                if (install) {
-                    window.open('https://metamask.io/', '_blank');
-                }
-            }
-        }
-
-        function connectWalletConnect() {
-            // WalletConnect Simulation (in Realität würde man das WalletConnect SDK verwenden)
-            alert(
-                '🔗 WalletConnect Integration\n\n' +
-                'WalletConnect ermöglicht die Verbindung mit mobilen Wallets.\n' +
-                'Diese Funktion würde in der finalen Version implementiert werden.\n\n' +
-                'Für jetzt können Sie eine neue Wallet erstellen oder die Adresse manuell eingeben.'
-            );
         }
 
         function showWalletGenerator() {
@@ -1068,12 +1057,6 @@
             });
         }
 
-
-        function maskWalletAddress(address) {
-            if (address.length <= 10) return address;
-            return address.substring(0, 6) + '...' + address.substring(address.length - 4);
-        }
-
         function updateStats(coinAmount, totalPrice) {
             const totalSold = document.getElementById('totalSold');
             const totalRaised = document.getElementById('totalRaised');
@@ -1086,23 +1069,24 @@
 
         function renderPurchasesList() {
             const listContainer = document.getElementById('purchasesList');
-            const displayPurchases = showAllPurchases ? purchases : purchases.slice(0, 5);
+            //const displayPurchases = showAllPurchases ? purchases : purchases.slice(0, 5);
             
             if (purchases.length === 0) {
-                listContainer.innerHTML = '<p style="text-align: center; color: #666;">Noch keine Käufe getätigt.</p>';
+                listContainer.innerHTML = '<p style="text-align: center; color: #555;">Noch keine Käufe getätigt.</p>';
                 return;
             }
 
             let html = '';
-            displayPurchases.forEach((purchase, index) => {
-                const timeAgo = getTimeAgo(purchase.time);
+            purchases.forEach((purchase, index) => {
+                //const timeAgo = getTimeAgo(purchase.time); // • ${timeAgo}
+                console.log(purchase);
                 html += `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; background: ${index < 3 ? '#e8f5e8' : '#f8f9fa'}; border-radius: 10px; border-left: 4px solid ${index < 3 ? '#28a745' : '#6c757d'};">
                         <div>
                             <strong>${purchase.amount.toLocaleString()} BLOXXER</strong><br>
-                            <small style="color: #666;">
+                            <small style="color: #555;">
                                 Wallet: <code>${purchase.wallet}</code><br>
-                                ${purchase.method} • ${timeAgo}
+                                ${purchase.method} 
                             </small>
                         </div>
                         <div style="text-align: right;">
@@ -1113,7 +1097,7 @@
             });
             
             listContainer.innerHTML = html;
-            
+            /*
             // Button Text aktualisieren
             const toggleBtn = document.getElementById('toggleBtn');
             if (purchases.length > 5) {
@@ -1121,7 +1105,7 @@
                 toggleBtn.textContent = showAllPurchases ? 'Weniger anzeigen' : `Alle ${purchases.length} Käufe anzeigen`;
             } else {
                 toggleBtn.style.display = 'none';
-            }
+            }*/
         }
 
         function togglePurchasesList() {
@@ -1133,12 +1117,46 @@
         // Initial Setup beim Laden der Seite
         document.addEventListener('DOMContentLoaded', function() {
             animateStats();
-            calculatePrice();
+            fetchPurchases();
             renderPurchasesList();
+
+        });
+        const discoveredProviders = [];
+
+        window.addEventListener("eip6963:announceProvider", (event) => {
+        discoveredProviders.push(event.detail);
         });
 
-        // Initial Preis berechnen
-        calculatePrice();
+        window.dispatchEvent(new Event("eip6963:requestProvider"));
+
+        document.getElementById("connectBtn").addEventListener("click", async () => {
+            if (discoveredProviders.length === 1) {
+                const detail = discoveredProviders[0];
+                const accounts = await detail.provider.request({ method: "eth_requestAccounts" });
+                connectedWallet = {
+                    address: accounts[0],
+                    type: detail.info.name // Name der Wallet z.B. "MetaMask"
+                };
+                console.log(detail.info);
+                showConnectedWallet();
+
+            } else if (discoveredProviders.length > 1) {
+                const choice = prompt("Wähle Wallet: " + discoveredProviders.map(p => p.info.name).join(", "));
+                const detail = discoveredProviders.find(p => p.info.name === choice);
+                if (detail) {
+                    const accounts = await detail.provider.request({ method: "eth_requestAccounts" });
+                    connectedWallet = {
+                        address: accounts[0],
+                        type: detail.info.name
+                    };
+                    console.log(detail.info);
+                    showConnectedWallet();
+                }
+
+            } else {
+                alert("Keine Wallet gefunden.");
+            }
+        });
 
         // Smooth Scrolling für bessere UX
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
